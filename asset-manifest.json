@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/calculateur-demenagement/static/css/main.e6c13ad2.css",
+    "main.js": "/calculateur-demenagement/static/js/main.ef859dec.js",
+    "static/js/239.8f08ce04.chunk.js": "/calculateur-demenagement/static/js/239.8f08ce04.chunk.js",
+    "static/js/977.2e49c9ed.chunk.js": "/calculateur-demenagement/static/js/977.2e49c9ed.chunk.js",
+    "static/js/732.0672973b.chunk.js": "/calculateur-demenagement/static/js/732.0672973b.chunk.js",
+    "static/js/453.b8456493.chunk.js": "/calculateur-demenagement/static/js/453.b8456493.chunk.js",
+    "index.html": "/calculateur-demenagement/index.html",
+    "main.e6c13ad2.css.map": "/calculateur-demenagement/static/css/main.e6c13ad2.css.map",
+    "main.ef859dec.js.map": "/calculateur-demenagement/static/js/main.ef859dec.js.map",
+    "239.8f08ce04.chunk.js.map": "/calculateur-demenagement/static/js/239.8f08ce04.chunk.js.map",
+    "977.2e49c9ed.chunk.js.map": "/calculateur-demenagement/static/js/977.2e49c9ed.chunk.js.map",
+    "732.0672973b.chunk.js.map": "/calculateur-demenagement/static/js/732.0672973b.chunk.js.map",
+    "453.b8456493.chunk.js.map": "/calculateur-demenagement/static/js/453.b8456493.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.ef859dec.js"
+  ]
+}
