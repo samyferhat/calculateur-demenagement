@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { items as initialItems } from './data/itemsData';
 import ItemSelector from './components/ItemSelector';
 import VolumeDisplay from './components/VolumeDisplay';
@@ -8,7 +8,15 @@ import AddItemForm from './components/AddItemForm';
 function App() {
   const [selectedItems, setSelectedItems] = useState({});
 
-  const [items, setItems] = useState(initialItems);
+
+  const LOCAL_STORAGE_KEY = 'demenagement_items';
+
+const loadItemsFromStorage = () => {
+  const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+  return saved ? JSON.parse(saved) : initialItems;
+};
+
+const [items, setItems] = useState(loadItemsFromStorage);
 
   const handleQuantityChange = (id, quantity) => {
     setSelectedItems((prev) => ({
@@ -29,6 +37,11 @@ function App() {
   const handleAddItem = (newItem) => {
     setItems((prev) => [...prev, newItem]);
   };
+
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(items));
+  }, [items]);
+  
   
   const downloadPDF = () => {
     const doc = new jsPDF();
@@ -52,7 +65,19 @@ function App() {
     doc.save('volume_demenagement.pdf');
   };
   
+  const handleDeleteItem = (itemId) => {
+    const itemToDelete = items.find((item) => item.id === itemId);
+    const confirmed = window.confirm(`Supprimer "${itemToDelete?.name}" ?`);
   
+    if (!confirmed) return;
+  
+    setItems((prev) => prev.filter((item) => item.id !== itemId));
+    setSelectedItems((prev) => {
+      const updated = { ...prev };
+      delete updated[itemId];
+      return updated;
+    });
+  };
   return (
     <div style={styles.appContainer}>
     <div style={{ padding: '2rem' }}>
@@ -60,14 +85,15 @@ function App() {
       <h2>Ajouter un objet personnalisé</h2>
 <AddItemForm onAdd={handleAddItem} />
 
-      {items.map((item) => (
-        <ItemSelector
-          key={item.id}
-          item={item}
-          quantity={selectedItems[item.id] || 0}
-          onQuantityChange={handleQuantityChange}
-        />
-      ))}
+{items.map((item) => (
+  <ItemSelector
+    key={item.id}
+    item={item}
+    quantity={selectedItems[item.id] || 0}
+    onQuantityChange={handleQuantityChange}
+    onDelete={handleDeleteItem} // 🔥 toujours autorisé maintenant
+  />
+))}
       <button onClick={resetQuantities} style={styles.resetButton}>
    Réinitialiser
 </button>
