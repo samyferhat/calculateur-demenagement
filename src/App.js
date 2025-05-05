@@ -174,14 +174,14 @@ function App() {
             onChange={handleUserInfoChange}
             style={styles.input}
           />
-          <input
-            type="date"
-            name="date"
-            placeholder='Date de déménagement'
-            value={userInfo.date}
-            onChange={handleUserInfoChange}
-            style={styles.input}
-          />
+          <label style={styles.label}>Date de déménagement souhaitée</label>
+<input
+  type="date"
+  name="date"
+  value={userInfo.date}
+  onChange={handleUserInfoChange}
+  style={styles.input}
+/>
         </div>
 
         <h3>Ajouter un objet personnalisé</h3>
@@ -245,7 +245,11 @@ const styles = {
     flex: '1 1 200px',
     padding: '0.5rem',
   },
-
+  label: {
+    marginBottom: '4px',
+    marginTop: '5px',
+    fontSize: '0.9rem',
+  }
 };
 
 export default App;
