@@ -177,6 +177,7 @@ function App() {
           <input
             type="date"
             name="date"
+            placeholder='Date de déménagement'
             value={userInfo.date}
             onChange={handleUserInfoChange}
             style={styles.input}
