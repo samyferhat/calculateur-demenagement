@@ -56,13 +56,13 @@ function App() {
 
   const downloadPDF = () => {
     const doc = new jsPDF();
-  
+
     const marginLeft = 15;
     const lineHeight = 8;
     const pageHeight = doc.internal.pageSize.height;
     let y = 20;
     let pageCount = 1;
-  
+
     const addPageIfNeeded = () => {
       if (y > pageHeight - 20) {
         doc.addPage();
@@ -70,13 +70,13 @@ function App() {
         y = 20;
       }
     };
-  
+
     // 🟦 Titre
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
     doc.text('Calculateur de Volume de Déménagement', marginLeft, y);
     y += 12;
-  
+
     // 🟩 Infos utilisateur
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
@@ -84,18 +84,18 @@ function App() {
     doc.text(`Prénom : ${userInfo.prenom}`, marginLeft, y); y += lineHeight;
     doc.text(`Adresse : ${userInfo.adresse}`, marginLeft, y); y += lineHeight;
     doc.text(`Date de déménagement souhaitée : ${userInfo.date}`, marginLeft, y); y += 15;
-  
+
     // 🟨 Liste des objets
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text('Liste des objets', marginLeft, y); y += 10;
-  
+
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
-  
+
     const pages = []; // Pour stocker les pages à paginer à la fin
     pages.push(doc.internal.getNumberOfPages());
-  
+
     let total = 0;
     items.forEach((item) => {
       const qty = selectedItems[item.id] || 0;
@@ -108,14 +108,14 @@ function App() {
         total += parseFloat(itemVolume);
       }
     });
-  
+
     // 🟥 Volume total
     y += 10;
     addPageIfNeeded();
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(13);
     doc.text(`Volume total estimé : ${total.toFixed(2)} m³`, marginLeft, y);
-  
+
     // 🧾 PAGINATION : après avoir ajouté toutes les pages
     const totalPages = doc.internal.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
@@ -126,11 +126,14 @@ function App() {
         align: 'right'
       });
     }
-  
+
     // ✅ Sauvegarde
-    doc.save('volume_demenagement.pdf');
+
+    //inclure le nom du client dans le nom du fichier
+    const fileName = `volume_demenagement_${userInfo.nom}_${userInfo.prenom}.pdf`;  
+    doc.save(fileName);
   };
-  
+
   const handleDeleteItem = (itemId) => {
     const itemToDelete = items.find((item) => item.id === itemId);
     const confirmed = window.confirm(`Supprimer "${itemToDelete?.name}" ?`);
@@ -175,13 +178,13 @@ function App() {
             style={styles.input}
           />
           <label style={styles.label}>Date de déménagement souhaitée</label>
-<input
-  type="date"
-  name="date"
-  value={userInfo.date}
-  onChange={handleUserInfoChange}
-  style={styles.input}
-/>
+          <input
+            type="date"
+            name="date"
+            value={userInfo.date}
+            onChange={handleUserInfoChange}
+            style={styles.input}
+          />
         </div>
 
         <h3>Ajouter un objet personnalisé</h3>
