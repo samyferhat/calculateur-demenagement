@@ -12,6 +12,10 @@ function App() {
     prenom: '',
     adresse: '',
     date: '',
+    adresseArrivee: '',
+    prix: '',
+    prestation: '',
+    remarques: '',
   });
 
 
@@ -54,13 +58,19 @@ function App() {
   };
 
 
+  const formatDateFR = (dateString) => {
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split('-');
+    return `${day}/${month}/${year}`;
+  };
+
   const downloadPDF = () => {
     const doc = new jsPDF();
 
     const marginLeft = 15;
     const lineHeight = 8;
     const pageHeight = doc.internal.pageSize.height;
-    let y = 20;
+    let y = 25;
     let pageCount = 1;
 
     const addPageIfNeeded = () => {
@@ -75,7 +85,7 @@ function App() {
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
     doc.text('Calculateur de Volume de Déménagement', marginLeft, y);
-    y += 12;
+    y += 15;
 
     // 🟩 Infos utilisateur
     doc.setFontSize(12);
@@ -83,7 +93,20 @@ function App() {
     doc.text(`Nom : ${userInfo.nom}`, marginLeft, y); y += lineHeight;
     doc.text(`Prénom : ${userInfo.prenom}`, marginLeft, y); y += lineHeight;
     doc.text(`Adresse : ${userInfo.adresse}`, marginLeft, y); y += lineHeight;
-    doc.text(`Date de déménagement souhaitée : ${userInfo.date}`, marginLeft, y); y += 15;
+    doc.text(`Adresse d'arrivée : ${userInfo.adresseArrivee}`, marginLeft, y); y += 8;
+    doc.text(`Prix estimé : ${userInfo.prix} €`, marginLeft, y); y += 8;
+    doc.text(`Prestation : ${userInfo.prestation}`, marginLeft, y); y += 8;
+    doc.text(`Date de déménagement souhaitée : ${formatDateFR(userInfo.date)}`, marginLeft, y);
+    y += 8;
+
+    if (userInfo.remarques) {
+      doc.text('Remarques :', marginLeft, y); y += 6;
+      const splitText = doc.splitTextToSize(userInfo.remarques, 180);
+      doc.text(splitText, marginLeft, y);
+      y += splitText.length * 6;
+    }
+
+    y += 5;
 
     // 🟨 Liste des objets
     doc.setFontSize(14);
@@ -130,7 +153,7 @@ function App() {
     // ✅ Sauvegarde
 
     //inclure le nom du client dans le nom du fichier
-    const fileName = `volume_demenagement_${userInfo.nom}_${userInfo.prenom}.pdf`;  
+    const fileName = `volume_demenagement_${userInfo.nom}_${userInfo.prenom}.pdf`;
     doc.save(fileName);
   };
 
@@ -177,6 +200,14 @@ function App() {
             onChange={handleUserInfoChange}
             style={styles.input}
           />
+          <input
+            type="text"
+            name="adresseArrivee"
+            placeholder="Adresse d'arrivée"
+            value={userInfo.adresseArrivee}
+            onChange={handleUserInfoChange}
+            style={styles.input}
+          />
           <label style={styles.label}>Date de déménagement souhaitée</label>
           <input
             type="date"
@@ -185,6 +216,35 @@ function App() {
             onChange={handleUserInfoChange}
             style={styles.input}
           />
+
+
+          <input
+            type="number"
+            name="prix"
+            placeholder="Prix estimé (€)"
+            value={userInfo.prix}
+            onChange={handleUserInfoChange}
+            style={styles.input}
+          />
+
+          <input
+            type="text"
+            name="prestation"
+            placeholder="Type de prestation"
+            value={userInfo.prestation}
+            onChange={handleUserInfoChange}
+            style={styles.input}
+          />
+
+          <textarea
+            name="remarques"
+            placeholder="Informations complémentaires ou remarques"
+            value={userInfo.remarques}
+            onChange={handleUserInfoChange}
+            rows="3"
+            style={{ ...styles.input, width: '100%' }}
+          />
+
         </div>
 
         <h3>Ajouter un objet personnalisé</h3>
@@ -240,13 +300,15 @@ const styles = {
   },
   userInfoContainer: {
     display: 'flex',
-    flexWrap: 'wrap',
-    gap: '0.5rem',
+    flexDirection: 'column', // ⬅️ ajoute ça
+    gap: '0.75rem',
     marginBottom: '1.5rem',
-  },
+  }
+  ,
   input: {
-    flex: '1 1 200px',
+    width: '100%', // ⬅️ remplace flex par width
     padding: '0.5rem',
+    boxSizing: 'border-box', // pour éviter débordements
   },
   label: {
     marginBottom: '4px',
